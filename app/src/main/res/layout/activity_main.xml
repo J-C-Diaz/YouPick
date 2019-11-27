@@ -10,8 +10,15 @@
         android:text="Welcome" />
 
     <Button
-        android:id="@+id/sign_out_button"
-        android:layout_width="match_parent"
+        android:id="@+id/meal_button"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Button" />
+        android:text="Select a Meal"
+        android:onClick="randomSelect"/>
+
+    <Button
+        android:id="@+id/sign_out_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sign Out" />
 </LinearLayout>

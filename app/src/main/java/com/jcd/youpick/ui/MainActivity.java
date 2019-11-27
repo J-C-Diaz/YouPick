@@ -19,6 +19,7 @@ import com.jcd.youpick.R;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import java.util.concurrent.ThreadLocalRandom;
 
 
 
@@ -26,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
 
     GoogleSignInClient mGoogleSignInClient;
     Button signOut;
+    Button mealButton;
     TextView welcomeMsg;
 
     @Override
@@ -49,6 +51,16 @@ public class MainActivity extends AppCompatActivity {
 
         }
 
+        mealButton = findViewById(R.id.meal_button);
+        mealButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String[] foodOptions = new String[]{"Pizza", "Burgers", "Salad", "Tacos", "Chinese", "Sandwiches", "Chicken"};
+                int randomNum = ThreadLocalRandom.current().nextInt(0, foodOptions.length);
+                Toast.makeText(MainActivity.this, "Today's meal should be: " + foodOptions[randomNum], Toast.LENGTH_LONG).show();
+            }
+        });
+
         signOut = findViewById(R.id.sign_out_button);
         signOut.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,9 +82,10 @@ public class MainActivity extends AppCompatActivity {
                 .addOnCompleteListener(this, new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        Toast.makeText(MainActivity.this, "Signed Out Successfully", Toast.LENGTH_SHORT);
+                        Toast.makeText(MainActivity.this, "Signed Out Successfully", Toast.LENGTH_SHORT).show();
                         finish();
                     }
                 });
     }
+
 }

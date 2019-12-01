@@ -12,4 +12,6 @@ Food Decider app
 Resources Used:
 	https://developers.google.com/identity/sign-in/android/start-integrating For Google Sign in
 	https://medium.com/mindorks/creating-dynamic-layouts-in-android-d4008b72f2d For Dynamically adding buttons
+	https://stackoverflow.com/questions/8937380/how-to-set-id-of-dynamic-created-layout For Generating ID's dynamically
+	https://developer.android.com/guide/topics/ui/controls/togglebutton#java For working with toggle buttons
 	

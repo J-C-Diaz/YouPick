@@ -5,6 +5,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,6 +31,8 @@ public class MainActivity extends AppCompatActivity {
     Button signOut;
     Button mealButton;
     TextView welcomeMsg;
+    String[] foodOptions = new String[]{"Pizza", "Burgers", "Salad", "Tacos", "Chinese", "Sandwiches", "Chicken"};
+    LinearLayout linearLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +51,16 @@ public class MainActivity extends AppCompatActivity {
             String personId = acct.getId();
             Uri personPhoto = acct.getPhotoUrl();
 
-            welcomeMsg.setText("Welcome" + personName);
+            welcomeMsg.setText("Welcome " + personName);
+            linearLayout = findViewById(R.id.linearLayout);
+
+            for(int i = 0; i < foodOptions.length; i++){
+                Button newButton = new Button(this);
+                newButton.setText(foodOptions[i]);
+                linearLayout.addView(newButton);
+            }
+
+
 
         }
 
@@ -55,7 +68,6 @@ public class MainActivity extends AppCompatActivity {
         mealButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String[] foodOptions = new String[]{"Pizza", "Burgers", "Salad", "Tacos", "Chinese", "Sandwiches", "Chicken"};
                 int randomNum = ThreadLocalRandom.current().nextInt(0, foodOptions.length);
                 Toast.makeText(MainActivity.this, "Today's meal should be: " + foodOptions[randomNum], Toast.LENGTH_LONG).show();
             }

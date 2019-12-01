@@ -1,14 +1,15 @@
 package com.jcd.youpick.ui;
 
-import android.content.Context;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -21,6 +22,8 @@ import com.jcd.youpick.R;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
+import java.util.Vector;
 import java.util.concurrent.ThreadLocalRandom;
 
 
@@ -31,7 +34,8 @@ public class MainActivity extends AppCompatActivity {
     Button signOut;
     Button mealButton;
     TextView welcomeMsg;
-    String[] foodOptions = new String[]{"Pizza", "Burgers", "Salad", "Tacos", "Chinese", "Sandwiches", "Chicken"};
+    String[] defaultFood = new String[]{"Pizza", "Burgers", "Salad", "Tacos", "Chinese", "Sandwiches", "Chicken"};
+    Vector<String> foodOptions = new Vector<>();
     LinearLayout linearLayout;
 
     @Override
@@ -54,9 +58,26 @@ public class MainActivity extends AppCompatActivity {
             welcomeMsg.setText("Welcome " + personName);
             linearLayout = findViewById(R.id.linearLayout);
 
-            for(int i = 0; i < foodOptions.length; i++){
-                Button newButton = new Button(this);
-                newButton.setText(foodOptions[i]);
+
+            for(int i = 0; i < defaultFood.length; i++){
+                final ToggleButton newButton = new ToggleButton(this);
+                newButton.setText(defaultFood[i]);
+                newButton.setId(View.generateViewId());
+                newButton.setTextOff(defaultFood[i]);
+                newButton.setTextOn(defaultFood[i]);
+                newButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        if (isChecked){
+                            foodOptions.add(buttonView.getText().toString());
+                            buttonView.setBackgroundColor(Color.GREEN);
+                        }
+                        else{
+                            foodOptions.remove(buttonView.getText().toString());
+                            buttonView.setBackgroundColor(Color.RED);
+                        }
+                    }
+                });
                 linearLayout.addView(newButton);
             }
 
@@ -68,8 +89,8 @@ public class MainActivity extends AppCompatActivity {
         mealButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int randomNum = ThreadLocalRandom.current().nextInt(0, foodOptions.length);
-                Toast.makeText(MainActivity.this, "Today's meal should be: " + foodOptions[randomNum], Toast.LENGTH_LONG).show();
+                int randomNum = ThreadLocalRandom.current().nextInt(0, foodOptions.size());
+                Toast.makeText(MainActivity.this, "Today's meal should be: " + foodOptions.elementAt(randomNum), Toast.LENGTH_LONG).show();
             }
         });
 

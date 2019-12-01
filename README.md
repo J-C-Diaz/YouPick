@@ -11,4 +11,5 @@ Food Decider app
 
 Resources Used:
 	https://developers.google.com/identity/sign-in/android/start-integrating For Google Sign in
+	https://medium.com/mindorks/creating-dynamic-layouts-in-android-d4008b72f2d For Dynamically adding buttons
 	

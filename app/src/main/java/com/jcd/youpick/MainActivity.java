@@ -100,23 +100,37 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
             options.add(newOption);
-            Button myButton = new Button(this);
-            final CardView myCardView = new CardView(this);
-            TextView newTextView = new TextView(this);
             int optionCount = options.size();
-            newTextView.setText(newOption);
-            myCardView.addView(newTextView);
-            myCardView.setId(View.generateViewId());
-            myCardView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    alertDialog(myCardView.getId(), v, newOption);
-                }
-            });
+            if (optionCount == 7){
+                Toast.makeText(this, "Max Number of options added" , Toast.LENGTH_SHORT).show();
+                options.removeElementAt(optionCount - 1);
+                return;
+            }
 
-            LinearLayout ll = (LinearLayout) findViewById(R.id.linearLayout3);
-            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            ll.addView(myCardView, lp);
+
+
+            int cardID = getResources().getIdentifier("cardView" + Integer.toString(optionCount), "id", getPackageName());
+            CardView newCardView = (CardView) findViewById(cardID);
+            newCardView.setVisibility(View.VISIBLE);
+            int textID = getResources().getIdentifier("textView" + Integer.toString(optionCount), "id", getPackageName());
+            TextView newTextView = (TextView) findViewById(textID);
+            newTextView.setText(newOption);
+//            Button myButton = new Button(this);
+//            final CardView myCardView = new CardView(this);
+//            TextView newTextView = new TextView(this);
+//            newTextView.setText(newOption);
+//            myCardView.addView(newTextView);
+//            myCardView.setId(View.generateViewId());
+//            myCardView.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    alertDialog(myCardView.getId(), v, newOption);
+//                }
+//            });
+
+            //LinearLayout ll = (LinearLayout) findViewById(R.id.linearLayout3);
+            //LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            //ll.addView(myCardView, lp);
         }
     }
 

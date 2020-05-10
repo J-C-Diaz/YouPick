@@ -15,3 +15,13 @@ Resources Used:
 	https://stackoverflow.com/questions/8937380/how-to-set-id-of-dynamic-created-layout For Generating ID's dynamically
 	https://developer.android.com/guide/topics/ui/controls/togglebutton#java For working with toggle buttons
 	
+
+	New Version:
+	https://developer.android.com/guide/topics/ui/layout/relative
+	https://developer.android.com/reference/android/widget/ScrollView
+	https://stackoverflow.com/questions/1851633/how-to-add-a-button-dynamically-in-android
+	https://stackoverflow.com/questions/10673628/implementing-onclicklistener-for-dynamically-created-buttons-in-android
+	https://www.tutorialspoint.com/how-do-i-display-an-alert-dialog-on-android
+	Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a> plate icon (temporary use only)
+	https://stackoverflow.com/questions/6679434/android-findviewbyid-with-a-variant-string for dynamicID
+	

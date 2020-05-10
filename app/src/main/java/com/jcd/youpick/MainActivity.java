@@ -10,6 +10,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
 import androidx.core.widget.NestedScrollView;
 
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -29,6 +30,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class MainActivity extends AppCompatActivity {
     EditText editText;
     Vector<String> options = new Vector();
+    int optionCount = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,21 +102,36 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
             options.add(newOption);
-            int optionCount = options.size();
+            optionCount = options.size();
             if (optionCount == 7){
                 Toast.makeText(this, "Max Number of options added" , Toast.LENGTH_SHORT).show();
                 options.removeElementAt(optionCount - 1);
                 return;
             }
 
+            //iterate through all cardviews to see what is the first invisible one
+            for(int i = 1; i < 7; i++){
+                int id = getResources().getIdentifier("cardView" + Integer.toString(i), "id", getPackageName());
+                CardView newCardView = (CardView) findViewById(id);
+                if (newCardView.getVisibility() == View.INVISIBLE){
+                    optionCount = i;
+                    break;
+                }
+            }
 
-
-            int cardID = getResources().getIdentifier("cardView" + Integer.toString(optionCount), "id", getPackageName());
+            Toast.makeText(getApplicationContext(),Integer.toString(optionCount),Toast.LENGTH_SHORT).show();
+            final int cardID = getResources().getIdentifier("cardView" + Integer.toString(optionCount), "id", getPackageName());
             CardView newCardView = (CardView) findViewById(cardID);
             newCardView.setVisibility(View.VISIBLE);
             int textID = getResources().getIdentifier("textView" + Integer.toString(optionCount), "id", getPackageName());
             TextView newTextView = (TextView) findViewById(textID);
             newTextView.setText(newOption);
+            newCardView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    alertDialog(optionCount, v, newOption);
+                }
+            });
 //            Button myButton = new Button(this);
 //            final CardView myCardView = new CardView(this);
 //            TextView newTextView = new TextView(this);
@@ -134,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void alertDialog(final int id, final View v, final String s) {
+    private void alertDialog(final int count, final View v, final String s) {
         AlertDialog.Builder dialog=new AlertDialog.Builder(this);
         dialog.setMessage("Would you like to remove \"" + s + "\" from the list of options?" );
         dialog.setTitle("Dialog Box");
@@ -142,10 +159,11 @@ public class MainActivity extends AppCompatActivity {
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog,
                                         int which) {
-                        //View card = View.findViewById(id);
-
-                        ((ViewGroup) v.getParent()).removeView(v);
-                        Toast.makeText(getApplicationContext(),"Deleted Successfully",Toast.LENGTH_LONG).show();
+                        v.setVisibility(View.INVISIBLE);
+                        options.remove(s);
+                        optionCount--;
+                        Toast.makeText(getApplicationContext(),Integer.toString(count - 1),Toast.LENGTH_LONG).show();
+                        //Toast.makeText(getApplicationContext(),"Deleted Successfully",Toast.LENGTH_LONG).show();
                     }
                 });
         dialog.setNegativeButton("Cancel",new DialogInterface.OnClickListener() {

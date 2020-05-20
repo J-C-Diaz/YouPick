@@ -2,9 +2,12 @@ package com.jcd.youpick;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
@@ -20,6 +23,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
     EditText editText;
     Vector<String> options = new Vector();
     int optionCount = 0;
+    int previouslySelected = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +43,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -49,13 +53,23 @@ public class MainActivity extends AppCompatActivity {
                 } catch (Exception e) {
                     // TODO: handle exception
                 }
+
+                if (previouslySelected >= 0){
+                    int id = getResources().getIdentifier("cardView" + Integer.toString(previouslySelected+ 1), "id", getPackageName());
+                    CardView newCardView = (CardView) findViewById(id);
+                    newCardView.setCardBackgroundColor(Color.WHITE);
+                    previouslySelected = -1;
+                }
                 if (options.size() == 0) {
                     Snackbar.make(view, "Enter at least one dining option", Snackbar.LENGTH_SHORT)
                             .setAction("Action", null).show();
                 }
                 else {
                     int randomNum = ThreadLocalRandom.current().nextInt(0, options.size());
-                    Snackbar.make(view, "Today's meal should be: " + options.elementAt(randomNum), Snackbar.LENGTH_SHORT).setAction("Action", null).show();
+                    previouslySelected = randomNum;
+                    int id = getResources().getIdentifier("cardView" + Integer.toString(randomNum + 1), "id", getPackageName());
+                    CardView newCardView = (CardView) findViewById(id);
+                    newCardView.setCardBackgroundColor(Color.GREEN);
                 }
             }
         });
@@ -119,7 +133,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
 
-            Toast.makeText(getApplicationContext(),Integer.toString(optionCount),Toast.LENGTH_SHORT).show();
             final int cardID = getResources().getIdentifier("cardView" + Integer.toString(optionCount), "id", getPackageName());
             CardView newCardView = (CardView) findViewById(cardID);
             newCardView.setVisibility(View.VISIBLE);
@@ -129,29 +142,14 @@ public class MainActivity extends AppCompatActivity {
             newCardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    alertDialog(optionCount, v, newOption);
+                    alertDialog(v, newOption);
                 }
             });
-//            Button myButton = new Button(this);
-//            final CardView myCardView = new CardView(this);
-//            TextView newTextView = new TextView(this);
-//            newTextView.setText(newOption);
-//            myCardView.addView(newTextView);
-//            myCardView.setId(View.generateViewId());
-//            myCardView.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    alertDialog(myCardView.getId(), v, newOption);
-//                }
-//            });
 
-            //LinearLayout ll = (LinearLayout) findViewById(R.id.linearLayout3);
-            //LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            //ll.addView(myCardView, lp);
         }
     }
 
-    private void alertDialog(final int count, final View v, final String s) {
+    private void alertDialog(final View v, final String s) {
         AlertDialog.Builder dialog=new AlertDialog.Builder(this);
         dialog.setMessage("Would you like to remove \"" + s + "\" from the list of options?" );
         dialog.setTitle("Dialog Box");
@@ -162,18 +160,20 @@ public class MainActivity extends AppCompatActivity {
                         v.setVisibility(View.INVISIBLE);
                         options.remove(s);
                         optionCount--;
-                        Toast.makeText(getApplicationContext(),Integer.toString(count - 1),Toast.LENGTH_LONG).show();
-                        //Toast.makeText(getApplicationContext(),"Deleted Successfully",Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(),"Deleted Successfully",Toast.LENGTH_LONG).show();
                     }
                 });
         dialog.setNegativeButton("Cancel",new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Toast.makeText(getApplicationContext(),"cancel is clicked",Toast.LENGTH_LONG).show();
             }
         });
         AlertDialog alertDialog=dialog.create();
         alertDialog.show();
     }
 
+    public void toFragment(View view) {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
 }

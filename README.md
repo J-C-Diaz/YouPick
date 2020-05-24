@@ -24,4 +24,4 @@ Resources Used:
 	https://www.tutorialspoint.com/how-do-i-display-an-alert-dialog-on-android
 	Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a> plate icon (temporary use only)
 	https://stackoverflow.com/questions/6679434/android-findviewbyid-with-a-variant-string for dynamicID
-	
+	https://developer.android.com/training/permissions/requesting

@@ -149,11 +149,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void alertDialog(final View v, final String s) {
+    private void alertDialog(final View v, final String s) { //displayed when a user selects a visible card
         AlertDialog.Builder dialog=new AlertDialog.Builder(this);
         dialog.setMessage("Would you like to remove \"" + s + "\" from the list of options?" );
         dialog.setTitle("Dialog Box");
-        dialog.setPositiveButton("DELETE",
+        dialog.setPositiveButton("DELETE", // User is given the option of deleting their created card
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog,
                                         int which) {
@@ -172,8 +172,8 @@ public class MainActivity extends AppCompatActivity {
         alertDialog.show();
     }
 
-    public void toFragment(View view) {
-        Intent intent = new Intent(this, MainActivity.class);
+    public void toMap(View view) {
+        Intent intent = new Intent(this, MapActivity.class);
         startActivity(intent);
     }
 }

@@ -8,6 +8,7 @@
 
 
     <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay">
@@ -22,7 +23,7 @@
     </com.google.android.material.appbar.AppBarLayout>
 
 
-<!--    <include layout="@layout/content_main" />-->
+    <!--    <include layout="@layout/content_main" />-->
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
@@ -31,18 +32,19 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
         app:srcCompat="@android:drawable/ic_dialog_email" />
+
     <RelativeLayout
-        android:paddingTop="60dp"
-        android:id="@+id/linearLayoutVertical"
+        android:id="@+id/relativeLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingTop="60dp">
 
         <LinearLayout
-            android:layout_centerHorizontal="true"
             android:id="@+id/linearLayoutHorizontal"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" 
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
             android:orientation="horizontal">
 
             <EditText
@@ -53,66 +55,64 @@
 
             <Button
                 android:id="@+id/textButton"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:onClick="addRestaurant"
                 android:text="Add Restaurant"
-                android:textSize="12dp"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
-                android:onClick="addRestaurant"></Button>
+                android:textSize="12dp"></Button>
 
         </LinearLayout>
 
         <GridLayout
-            android:layout_below="@+id/linearLayoutHorizontal"
-            android:layout_height="800dp"
-            android:layout_width="match_parent"
-            android:columnCount="2"
-            android:rowCount="3"
-            android:alignmentMode="alignMargins"
             android:id="@+id/mainGrid"
-            android:columnOrderPreserved="false"
+            android:layout_width="match_parent"
+            android:layout_height="800dp"
+            android:layout_below="@+id/linearLayoutHorizontal"
             android:layout_weight="8"
+            android:alignmentMode="alignMargins"
+            android:columnCount="2"
+            android:columnOrderPreserved="false"
             android:padding="14dp"
-            >
+            android:rowCount="3">
 
             <!-- Row 1 -->
             <!-- Column 1 -->
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardView1"
-                android:visibility="invisible"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:layout_columnWeight="1"
                 android:layout_rowWeight="1"
-                android:layout_marginBottom="16dp"
+                android:layout_columnWeight="1"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
-                app:cardElevation="8dp"
+                android:layout_marginBottom="16dp"
+                android:visibility="invisible"
                 app:cardCornerRadius="8dp"
-                >
+                app:cardElevation="8dp">
 
                 <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal|center_vertical"
                     android:layout_margin="16dp"
-                    android:orientation="vertical"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:orientation="vertical">
 
                     <ImageView
-                        android:src="@drawable/plate"
-                        android:layout_gravity="center_horizontal"
                         android:layout_width="wrap_content"
-                        android:layout_height="100dp" />
+                        android:layout_height="100dp"
+                        android:layout_gravity="center_horizontal"
+                        android:src="@drawable/plate" />
 
                     <TextView
                         android:id="@+id/textView1"
-                        android:text="Me"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_gravity="center"
+                        android:text="Me"
                         android:textColor="@android:color/black"
                         android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:textStyle="bold" />
 
                 </LinearLayout>
 
@@ -121,40 +121,39 @@
             <!-- Column 2 -->
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardView2"
-                android:visibility="invisible"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:layout_columnWeight="1"
                 android:layout_rowWeight="1"
-                android:layout_marginBottom="16dp"
+                android:layout_columnWeight="1"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
-                app:cardElevation="8dp"
+                android:layout_marginBottom="16dp"
+                android:visibility="invisible"
                 app:cardCornerRadius="8dp"
-                >
+                app:cardElevation="8dp">
 
                 <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal|center_vertical"
                     android:layout_margin="16dp"
-                    android:orientation="vertical"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:orientation="vertical">
 
                     <ImageView
-                        android:src="@drawable/plate"
-                        android:layout_gravity="center_horizontal"
                         android:layout_width="wrap_content"
-                        android:layout_height="100dp" />
+                        android:layout_height="100dp"
+                        android:layout_gravity="center_horizontal"
+                        android:src="@drawable/plate" />
 
                     <TextView
                         android:id="@+id/textView2"
-                        android:text="Family"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_gravity="center"
+                        android:text="Family"
                         android:textColor="@android:color/black"
                         android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:textStyle="bold" />
 
                 </LinearLayout>
 
@@ -166,40 +165,39 @@
             <!-- Column 1 -->
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardView3"
-                android:visibility="invisible"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:layout_columnWeight="1"
                 android:layout_rowWeight="1"
-                android:layout_marginBottom="16dp"
+                android:layout_columnWeight="1"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
-                app:cardElevation="8dp"
+                android:layout_marginBottom="16dp"
+                android:visibility="invisible"
                 app:cardCornerRadius="8dp"
-                >
+                app:cardElevation="8dp">
 
                 <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal|center_vertical"
                     android:layout_margin="16dp"
-                    android:orientation="vertical"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:orientation="vertical">
 
                     <ImageView
-                        android:src="@drawable/plate"
-                        android:layout_gravity="center_horizontal"
                         android:layout_width="wrap_content"
-                        android:layout_height="100dp" />
+                        android:layout_height="100dp"
+                        android:layout_gravity="center_horizontal"
+                        android:src="@drawable/plate" />
 
                     <TextView
                         android:id="@+id/textView3"
-                        android:text="Lovely"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_gravity="center"
+                        android:text="Lovely"
                         android:textColor="@android:color/black"
                         android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:textStyle="bold" />
 
                 </LinearLayout>
 
@@ -208,40 +206,39 @@
             <!-- Column 2 -->
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardView4"
-                android:visibility="invisible"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:layout_columnWeight="1"
                 android:layout_rowWeight="1"
-                android:layout_marginBottom="16dp"
+                android:layout_columnWeight="1"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
-                app:cardElevation="8dp"
+                android:layout_marginBottom="16dp"
+                android:visibility="invisible"
                 app:cardCornerRadius="8dp"
-                >
+                app:cardElevation="8dp">
 
                 <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal|center_vertical"
                     android:layout_margin="16dp"
-                    android:orientation="vertical"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:orientation="vertical">
 
                     <ImageView
-                        android:src="@drawable/plate"
-                        android:layout_gravity="center_horizontal"
                         android:layout_width="wrap_content"
-                        android:layout_height="100dp" />
+                        android:layout_height="100dp"
+                        android:layout_gravity="center_horizontal"
+                        android:src="@drawable/plate" />
 
                     <TextView
                         android:id="@+id/textView4"
-                        android:text="Team"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_gravity="center"
+                        android:text="Team"
                         android:textColor="@android:color/black"
                         android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:textStyle="bold" />
 
                 </LinearLayout>
 
@@ -253,40 +250,39 @@
             <!-- Column 1 -->
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardView5"
-                android:visibility="invisible"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:layout_columnWeight="1"
                 android:layout_rowWeight="1"
-                android:layout_marginBottom="16dp"
+                android:layout_columnWeight="1"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
-                app:cardElevation="8dp"
+                android:layout_marginBottom="16dp"
+                android:visibility="invisible"
                 app:cardCornerRadius="8dp"
-                >
+                app:cardElevation="8dp">
 
                 <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal|center_vertical"
                     android:layout_margin="16dp"
-                    android:orientation="vertical"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:orientation="vertical">
 
                     <ImageView
-                        android:src="@drawable/plate"
-                        android:layout_gravity="center_horizontal"
                         android:layout_width="wrap_content"
-                        android:layout_height="100dp" />
+                        android:layout_height="100dp"
+                        android:layout_gravity="center_horizontal"
+                        android:src="@drawable/plate" />
 
                     <TextView
                         android:id="@+id/textView5"
-                        android:text="Friends"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_gravity="center"
+                        android:text="Friends"
                         android:textColor="@android:color/black"
                         android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:textStyle="bold" />
 
                 </LinearLayout>
 
@@ -295,62 +291,55 @@
             <!-- Column 2 -->
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardView6"
-                android:visibility="invisible"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:layout_columnWeight="1"
                 android:layout_rowWeight="1"
-                android:layout_marginBottom="16dp"
+                android:layout_columnWeight="1"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
-                app:cardElevation="8dp"
+                android:layout_marginBottom="16dp"
+                android:visibility="invisible"
                 app:cardCornerRadius="8dp"
-                >
+                app:cardElevation="8dp">
 
                 <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal|center_vertical"
                     android:layout_margin="16dp"
-                    android:orientation="vertical"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:orientation="vertical">
 
                     <ImageView
-                        android:src="@drawable/plate"
-                        android:layout_gravity="center_horizontal"
                         android:layout_width="wrap_content"
-                        android:layout_height="100dp" />
+                        android:layout_height="100dp"
+                        android:layout_gravity="center_horizontal"
+                        android:src="@drawable/plate" />
 
                     <TextView
                         android:id="@+id/textView6"
-                        android:text="Calendars"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_gravity="center"
+                        android:text="Calendars"
                         android:textColor="@android:color/black"
                         android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:textStyle="bold" />
 
                 </LinearLayout>
 
             </androidx.cardview.widget.CardView>
 
 
+            >
+        </GridLayout>
+        <Button
+            android:layout_alignParentBottom="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Automatic entry"
+            android:onClick="toMap"></Button>
 
-            ></GridLayout>
-        <!--<androidx.core.widget.NestedScrollView
-            android:layout_centerHorizontal="true"
-            android:layout_below="@+id/linearLayoutHorizontal"
-            android:id="@+id/scrollView2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <LinearLayout
-                android:layout_gravity="center"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/linearLayout3"
-                android:orientation="vertical">
-            </LinearLayout>
-        </androidx.core.widget.NestedScrollView>-->
     </RelativeLayout>
+
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

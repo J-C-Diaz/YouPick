@@ -1,15 +1,24 @@
 package com.jcd.youpick;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.TileOverlay;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -19,6 +28,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -27,9 +37,17 @@ import java.util.Map;
 public class MapActivity extends AppCompatActivity
         implements OnMapReadyCallback,
         GoogleMap.OnMyLocationButtonClickListener,
-        GoogleMap.OnMyLocationClickListener{
+        GoogleMap.OnMyLocationClickListener,
+        LocationListener {
+
     final int MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1010;
     private GoogleMap mMap;
+    boolean mLocationPermissionGranted;
+    Location mLastKnownLocation;
+    int DEFAULT_ZOOM = 4;
+    LocationManager mLocationManager;
+    protected LocationListener locationListener;
+    boolean mapSet = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +59,7 @@ public class MapActivity extends AppCompatActivity
         MapFragment mapFragment = (MapFragment) getFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -48,65 +67,33 @@ public class MapActivity extends AppCompatActivity
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
-                getPermission();
+                //getPermission();
                 // Here, thisActivity is the current activity
             }
         });
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           String[] permissions, int[] grantResults) {
-        switch (requestCode) {
-            case MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // permission was granted, yay! Do the
-                    // contacts-related task you need to do.
-                    Toast.makeText(getApplicationContext(), "SUCCESS!", Toast.LENGTH_SHORT).show();
-
-                } else {
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
-                    Intent intent = new Intent(this, MainActivity.class);
-                    startActivity(intent);
-                }
-                return;
-            }
-
-            // other 'case' lines to check for other
-            // permissions this app might request.
+        PackageManager pm = this.getPackageManager();
+        int hasPerm = pm.checkPermission(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                this.getPackageName());
+        if (hasPerm != PackageManager.PERMISSION_GRANTED) {
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
         }
-    }
-
-    public void getPermission() {
-        if (ContextCompat.checkSelfPermission(MapActivity.this,
-                Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-
-            // Permission is not granted
-            // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(MapActivity.this,
-                    Manifest.permission.ACCESS_FINE_LOCATION)) {
-                // Show an explanation to the user *asynchronously* -- don't block
-                // this thread waiting for the user's response! After the user
-                // sees the explanation, try again to request the permission.
-            } else {
-                // No explanation needed; request the permission
-                ActivityCompat.requestPermissions(MapActivity.this,
-                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                        MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
-
-                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-                // app-defined int constant. The callback method gets the
-                // result of the request.
+        else {
+            Toast.makeText(this, "granted!", Toast.LENGTH_SHORT).show();
+            mLocationPermissionGranted = true;
+            mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+            if (mLastKnownLocation != null) {
+                LatLng current = new LatLng(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude());
+                mMap.addMarker(new MarkerOptions().position(current)
+                        .title("Current Location"));
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(current));
             }
-        } else {
-            // Permission has already been granted
         }
-    }
+        mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
 
+    }
 
     @Override
     public void onMapReady(GoogleMap map) {
@@ -131,5 +118,33 @@ public class MapActivity extends AppCompatActivity
         // (the camera animates to the user's current position).
         return false;
     }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        mLastKnownLocation = location;
+        if(!mapSet) {
+            LatLng current = new LatLng(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude());
+            mMap.addMarker(new MarkerOptions().position(current)
+                    .title("Current Location"));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(current, 12.0f));
+            mapSet = true;
+        }
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+        Log.d("Latitude","disable");
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+        Log.d("Latitude","enable");
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+        Log.d("Latitude","status");
+    }
+
 }
 

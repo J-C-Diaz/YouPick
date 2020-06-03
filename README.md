@@ -25,3 +25,5 @@ Resources Used:
 	Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a> plate icon (temporary use only)
 	https://stackoverflow.com/questions/6679434/android-findviewbyid-with-a-variant-string for dynamicID
 	https://developer.android.com/training/permissions/requesting
+	https://developers.google.com/maps/documentation/android-sdk/current-place-tutorial
+	https://javapapers.com/android/get-current-location-in-android/

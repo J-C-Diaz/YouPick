@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -11,6 +12,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 //credit to YouTube Channel Coding Cafe https://www.youtube.com/channel/UCIHBIPape0dWHKANkivrcJw
 public class GetNearbyPlaces extends AsyncTask<Object, String, String>
@@ -51,8 +53,10 @@ public class GetNearbyPlaces extends AsyncTask<Object, String, String>
 
     private void DisplayNearbyPlaces(List<HashMap<String, String>> nearByPlacesList)
     {
-        for (int i=0; i<nearByPlacesList.size(); i++)
-        {
+        int size = nearByPlacesList.size();
+        int randomNum = ThreadLocalRandom.current().nextInt(0, size);
+        for (int i = 0; i < size; i++) {
+
             MarkerOptions markerOptions = new MarkerOptions();
 
             HashMap<String, String> googleNearbyPlace = nearByPlacesList.get(i);
@@ -66,9 +70,14 @@ public class GetNearbyPlaces extends AsyncTask<Object, String, String>
             markerOptions.position(latLng);
             markerOptions.title(nameOfPlace + " : " + vicinity);
             markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
-            mMap.addMarker(markerOptions);
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-            mMap.animateCamera(CameraUpdateFactory.zoomTo(10));
+            if(i == randomNum) { //set the chosen location to a unique color
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng)); // center camera to selected location
+                mMap.animateCamera(CameraUpdateFactory.zoomTo(16));
+                markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+                mMap.addMarker(markerOptions);
+            }
+            //mMap.addMarker(markerOptions);
+
         }
     }
 }

@@ -21,6 +21,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.TileOverlay;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -31,6 +32,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
@@ -69,6 +71,8 @@ public class MapActivity extends AppCompatActivity implements
         OnMapReadyCallback,
         GoogleMap.OnMyLocationButtonClickListener,
         GoogleMap.OnMyLocationClickListener,
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener,
         LocationListener {
 
     final int MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1010;
@@ -79,13 +83,19 @@ public class MapActivity extends AppCompatActivity implements
     LocationManager mLocationManager;
     protected LocationListener locationListener;
     boolean mapSet = false;
+    private GoogleApiClient googleApiClient;
+    private LocationRequest locationRequest;
+    private double latitude, longitude;
+    private int ProximityRadius = 10000;
+    BottomNavigationView bottomNavigation;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        //Toolbar toolbar = findViewById(R.id.toolbar);
+        //setSupportActionBar(toolbar);
 
         MapFragment mapFragment = (MapFragment) getFragmentManager()
                 .findFragmentById(R.id.map);
@@ -98,8 +108,21 @@ public class MapActivity extends AppCompatActivity implements
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
-                //getPermission();
-                // Here, thisActivity is the current activity
+
+
+                Object transferData[] = new Object[2];
+                GetNearbyPlaces getNearbyPlaces = new GetNearbyPlaces();
+
+                mMap.clear();
+                String restaurant = "restaurant";
+                String url = getUrl(latitude, longitude, restaurant);
+
+                transferData[0] = mMap;
+                transferData[1] = url;
+
+                getNearbyPlaces.execute(transferData);
+                Toast.makeText(MapActivity.this, "Searching for Nearby Restaurants...", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MapActivity.this, "Showing Nearby Restaurants...", Toast.LENGTH_SHORT).show();
             }
         });
         PackageManager pm = this.getPackageManager();
@@ -153,12 +176,19 @@ public class MapActivity extends AppCompatActivity implements
     @Override
     public void onLocationChanged(Location location) {
         mLastKnownLocation = location;
+        latitude = mLastKnownLocation.getLatitude();
+        longitude = mLastKnownLocation.getLongitude();
         if(!mapSet) {
-            LatLng current = new LatLng(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude());
+            LatLng current = new LatLng(latitude, longitude);
             mMap.addMarker(new MarkerOptions().position(current)
                     .title("Current Location"));
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(current, 12.0f));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(current, 16.0f));
             mapSet = true;
+        }
+        if (googleApiClient != null)
+        {
+            //LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);
+            mLocationManager.removeUpdates(this);
         }
     }
 
@@ -175,6 +205,57 @@ public class MapActivity extends AppCompatActivity implements
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras) {
         Log.d("Latitude","status");
+    }
+
+    private String getUrl(double latitide, double longitude, String nearbyPlace)
+    {
+        StringBuilder googleURL = new StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
+        googleURL.append("location=" + latitide + "," + longitude);
+        googleURL.append("&radius=" + ProximityRadius);
+        googleURL.append("&type=" + nearbyPlace);
+        googleURL.append("&sensor=true");
+        googleURL.append("&key=" + "PUTKEYHERE");
+
+        Log.d("GoogleMapsActivity", "url = " + googleURL.toString());
+        return googleURL.toString();
+    }
+
+    protected synchronized void buildGoogleApiClient()
+    {
+        googleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+
+        googleApiClient.connect();
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle)
+    {
+        locationRequest = new LocationRequest();
+        locationRequest.setInterval(1100);
+        locationRequest.setFastestInterval(1100);
+        locationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+        {
+            //LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, this);
+            mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1100, 0, this);
+        }
+
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
     }
 
 }

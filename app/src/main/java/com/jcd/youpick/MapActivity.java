@@ -94,8 +94,8 @@ public class MapActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
-        //Toolbar toolbar = findViewById(R.id.toolbar);
-        //setSupportActionBar(toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         MapFragment mapFragment = (MapFragment) getFragmentManager()
                 .findFragmentById(R.id.map);
@@ -134,7 +134,6 @@ public class MapActivity extends AppCompatActivity implements
             startActivity(intent);
         }
         else {
-            Toast.makeText(this, "granted!", Toast.LENGTH_SHORT).show();
             mLocationPermissionGranted = true;
             mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
             if (mLastKnownLocation != null) {
@@ -214,7 +213,7 @@ public class MapActivity extends AppCompatActivity implements
         googleURL.append("&radius=" + ProximityRadius);
         googleURL.append("&type=" + nearbyPlace);
         googleURL.append("&sensor=true");
-        googleURL.append("&key=" + "PUTKEYHERE");
+        googleURL.append("&key=" + "INSERT API KEY HERE");
 
         Log.d("GoogleMapsActivity", "url = " + googleURL.toString());
         return googleURL.toString();
@@ -258,5 +257,9 @@ public class MapActivity extends AppCompatActivity implements
 
     }
 
+    public void toMain(View view) {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
 }
 
